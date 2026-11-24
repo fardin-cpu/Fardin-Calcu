@@ -1,3 +1,4 @@
+
 name: Build FARDIN FX-991F APK
 
 on:
@@ -15,6 +16,8 @@ jobs:
         run: |
           unzip -o calcclone.zip -d .
           test -f package.json
+          mkdir -p assets
+          cp file_000000002db0821180def70529f16d18.png assets/icon.png
 
       - uses: actions/setup-node@v4
         with:
@@ -28,6 +31,7 @@ jobs:
       - name: Install and build
         run: |
           npm install --legacy-peer-deps
+          npm install --no-save @capacitor/assets --legacy-peer-deps
           npm run build
 
       - name: Prepare Android
@@ -36,6 +40,7 @@ jobs:
             npx cap add android
           fi
           npx cap sync android
+          npx capacitor-assets generate --android
 
       - name: Build APK
         working-directory: android
